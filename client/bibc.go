@@ -30,19 +30,3 @@ func (client *BitosClient) Acknowledgement(msg packettypes.MsgAcknowledgement, o
 	}
 	return client.Broadcast(txf, &msg)
 }
-
-func (client *BitosClient) CleanPacket(msg packettypes.MsgCleanPacket, options ...Option) (*tx.BroadcastTxResponse, error) {
-	txf, err := Prepare(client, msg.GetSigners()[0], &msg, options...)
-	if err != nil {
-		return nil, err
-	}
-	return client.Broadcast(txf, &msg)
-}
-
-func (client *BitosClient) RecvCleanPacket(msg packettypes.MsgRecvCleanPacket, options ...Option) (*tx.BroadcastTxResponse, error) {
-	txf, err := Prepare(client, msg.GetSigners()[0], &msg, options...)
-	if err != nil {
-		return nil, err
-	}
-	return client.Broadcast(txf, &msg)
-}

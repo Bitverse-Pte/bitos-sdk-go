@@ -7,14 +7,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/BitOS-labs/bitos-sdk-go/types"
+	"github.com/avast/retry-go"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	sdktx "github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/tx"
 
-	"github.com/avast/retry-go"
+	"github.com/BitOS-labs/bitos-sdk-go/types"
 )
 
 type Option func(txf sdktx.Factory) sdktx.Factory
@@ -70,10 +70,12 @@ func (client *BitosClient) Broadcast(txf sdktx.Factory, msgs ...sdk.Msg) (res *t
 		client.accountRetriever.RemoveCache(client.ctx.FromAddress)
 	}
 
-	err = retry.Do(retryableFunc,
+	err = retry.Do(
+		retryableFunc,
 		retry.Attempts(3),
 		retry.RetryIf(retryIfFunc),
-		retry.OnRetry(onRetryFunc))
+		retry.OnRetry(onRetryFunc),
+	)
 
 	return
 }
@@ -128,10 +130,12 @@ func (client *BitosClient) CalculateGas(txf sdktx.Factory, msgs ...sdk.Msg) (res
 		client.accountRetriever.RemoveCache(client.ctx.FromAddress)
 	}
 
-	err = retry.Do(retryableFunc,
+	err = retry.Do(
+		retryableFunc,
 		retry.Attempts(3),
 		retry.RetryIf(retryIfFunc),
-		retry.OnRetry(onRetryFunc))
+		retry.OnRetry(onRetryFunc),
+	)
 
 	return
 }
@@ -151,9 +155,10 @@ func (client *BitosClient) calculateGas(txf sdktx.Factory, msgs ...sdk.Msg) (*tx
 }
 
 func (client *BitosClient) Simulate(txBytes []byte) (*tx.SimulateResponse, error) {
-	return client.TxClient.Simulate(context.Background(), &tx.SimulateRequest{
-		TxBytes: txBytes,
-	})
+	return client.TxClient.Simulate(
+		context.Background(),
+		&tx.SimulateRequest{TxBytes: txBytes},
+	)
 }
 
 func (client *BitosClient) BroadcastTx(txBytes []byte) (*tx.BroadcastTxResponse, error) {

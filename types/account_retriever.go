@@ -4,16 +4,16 @@ import (
 	"context"
 	"sync"
 
-	"github.com/BitOS-labs/bitos-sdk-go/common"
-	client2 "github.com/BitOS-labs/bitos-sdk-go/grpc"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+
+	"github.com/BitOS-labs/bitos-sdk-go/common"
+	grpcclient "github.com/BitOS-labs/bitos-sdk-go/grpc"
 )
 
 type AccountRetriever struct {
-	QueryClient client2.GClient
+	QueryClient grpcclient.GClient
 	Cache       common.Cache
 	mu          sync.Mutex
 }
@@ -44,6 +44,7 @@ func (ar *AccountRetriever) getFromCache(addr sdk.AccAddress) authtypes.AccountI
 			return v
 		}
 	}
+
 	return nil
 }
 
@@ -56,6 +57,7 @@ func (ar *AccountRetriever) GetAccount(clientCtx client.Context, addr sdk.AccAdd
 	if err != nil {
 		return nil, err
 	}
+
 	var acc authtypes.AccountI
 	if err := clientCtx.InterfaceRegistry.UnpackAny(res.Account, &acc); err != nil {
 		return nil, err

@@ -37,9 +37,11 @@ func newClient() (*client.BitosClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = c.WithKeyring(keyring.NewInMemory(c.GetCtx().KeyringOptions...)).
-		ImportMnemonic(testAcc1.name, testAcc1.mnemonic)
-	if err != nil {
+	if err = c.WithKeyring(
+		keyring.NewInMemory(c.GetCtx().KeyringOptions...),
+	).ImportMnemonic(
+		testAcc1.name, testAcc1.mnemonic,
+	); err != nil {
 		return nil, err
 	}
 	return c, nil

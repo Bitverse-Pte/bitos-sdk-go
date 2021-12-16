@@ -87,6 +87,17 @@ func (client *BitosClient) EnableCache() {
 	client.accountRetriever.Cache.Enable()
 }
 
+func (client *BitosClient) Key(name string) (string, error) {
+	if client.ctx.Keyring == nil {
+		return "", errors.New("no keyring found, please add keyring first")
+	}
+	info, err := client.ctx.Keyring.Key(name)
+	if err != nil {
+		return "", err
+	}
+	return info.GetAddress().String(), nil
+}
+
 func (client *BitosClient) ImportKey(name, armor, passphrase string) error {
 	if client.ctx.Keyring == nil {
 		return errors.New("no keyring found, please add keyring first")
